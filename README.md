@@ -51,3 +51,10 @@ npm run preview
 - `src/main.jsx` React entry point and Bootstrap import
 - `src/styles.css` custom styling overrides
 - `products/` local images used by the product cards
+
+
+v2 
+![alt text](devImages/image.png)
+
+
+![alt text](devImages/image2.png)
