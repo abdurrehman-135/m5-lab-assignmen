@@ -1,14 +1,17 @@
-import { useMemo, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import PRODUCTS from "./Components/products";
 import ShopNavbar from "./Components/navbar";
 import DisplayProducts from "./Components/displayProducts";
 import Cart from "./Components/cart";
+import SignIn from "./Components/signIn";
+import Checkout from "./Components/checkout";
 
 function App() {
   const [quantities, setQuantities] = useState(() =>
     PRODUCTS.reduce((acc, product) => ({ ...acc, [product.id]: 0 }), {}),
   );
+  const [signedInUser, setSignedInUser] = useState(null);
 
   const itemCount = useMemo(
     () =>
@@ -18,6 +21,12 @@ function App() {
       ),
     [quantities],
   );
+
+  useEffect(() => {
+    if (itemCount === 0) {
+      setSignedInUser(null);
+    }
+  }, [itemCount]);
 
   const handleAdd = (productId) => {
     setQuantities((current) => ({
@@ -33,9 +42,13 @@ function App() {
     }));
   };
 
+  const handleSignIn = (user) => {
+    setSignedInUser(user);
+  };
+
   return (
     <BrowserRouter>
-      <main className="min-vh-100 bg-white">
+      <main className="min-vh-100 shop-app">
         <ShopNavbar itemCount={itemCount} />
         <div className="container py-4">
           <Routes>
@@ -52,7 +65,37 @@ function App() {
             />
             <Route
               path="/cart"
-              element={<Cart products={PRODUCTS} quantities={quantities} />}
+              element={
+                <Cart
+                  products={PRODUCTS}
+                  quantities={quantities}
+                  itemCount={itemCount}
+                />
+              }
+            />
+            <Route
+              path="/signin"
+              element={
+                itemCount > 0 ? (
+                  <SignIn onSignIn={handleSignIn} />
+                ) : (
+                  <Navigate to="/cart" replace />
+                )
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                itemCount > 0 ? (
+                  signedInUser ? (
+                    <Checkout user={signedInUser} />
+                  ) : (
+                    <Navigate to="/signin" replace />
+                  )
+                ) : (
+                  <Navigate to="/cart" replace />
+                )
+              }
             />
           </Routes>
         </div>

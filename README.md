@@ -56,5 +56,8 @@ npm run preview
 v2 
 ![alt text](devImages/image.png)
 
-
 ![alt text](devImages/image2.png)
+
+![alt text](devImages/image3.png)
+
+![alt text](devImages/image4.png)
