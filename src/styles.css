@@ -1,5 +1,8 @@
 .shop-app {
-  background: #ffffff;
+  background:
+    radial-gradient(circle at top left, rgba(33, 190, 227, 0.12), transparent 22%),
+    linear-gradient(180deg, #f8fcff 0%, #ffffff 24%);
+  min-height: 100vh;
 }
 
 .shop-header {
@@ -42,14 +45,80 @@
   font-size: clamp(1.1rem, 3vw, 1.6rem);
 }
 
+.product-list-section {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.product-toolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(33, 190, 227, 0.14);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.product-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f92b1;
+}
+
+.product-list-title {
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  color: #102a43;
+}
+
+.product-list-copy {
+  max-width: 42rem;
+  color: #486581;
+}
+
+.product-sort-control {
+  width: min(240px, 100%);
+}
+
+.product-sort-label {
+  margin-bottom: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #102a43;
+}
+
+.product-sort-control .form-select {
+  border-color: rgba(16, 42, 67, 0.18);
+  border-radius: 0.8rem;
+  padding-block: 0.75rem;
+  font-weight: 600;
+  color: #102a43;
+  box-shadow: none;
+}
+
 .product-card {
-  border: none;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.94);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 30px rgba(15, 23, 42, 0.08);
 }
 
 .product-image-button {
   border: none;
   background: transparent;
   padding: 0;
+  border-radius: 0.9rem;
 }
 
 .product-image {
@@ -59,7 +128,18 @@
 }
 
 .product-price {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
   font-weight: 600;
+  background: #dff8ff;
+  color: #045c72;
+}
+
+.product-price-lg {
+  justify-content: center;
+  font-size: 1rem;
   color: #0f172a;
 }
 
@@ -307,6 +387,16 @@
 }
 
 @media (max-width: 900px) {
+  .product-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 1.1rem 1.15rem;
+  }
+
+  .product-sort-control {
+    width: 100%;
+  }
+
   .product-image {
     height: 90px;
     width: 90px;

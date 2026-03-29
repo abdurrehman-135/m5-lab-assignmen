@@ -1,13 +1,44 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+
+const PRICE_FORMATTER = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
 
 const DisplayProducts = ({ products, quantities, onAdd, onSubtract }) => {
   const [showModal, setShowModal] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
+  const [sortOption, setSortOption] = useState("normal");
+
+  const sortedProducts = useMemo(() => {
+    const arrangedProducts = [...products];
+
+    switch (sortOption) {
+      case "lowest":
+        arrangedProducts.sort((firstProduct, secondProduct) => {
+          return firstProduct.price - secondProduct.price;
+        });
+        break;
+      case "highest":
+        arrangedProducts.sort((firstProduct, secondProduct) => {
+          return secondProduct.price - firstProduct.price;
+        });
+        break;
+      default:
+        arrangedProducts.sort((firstProduct, secondProduct) => {
+          return firstProduct.id - secondProduct.id;
+        });
+        break;
+    }
+
+    return arrangedProducts;
+  }, [products, sortOption]);
 
   const handleShow = (product) => {
     setActiveProduct(product);
@@ -21,9 +52,33 @@ const DisplayProducts = ({ products, quantities, onAdd, onSubtract }) => {
 
   return (
     <>
-      <section aria-label="Product list">
+      <section aria-label="Product list" className="product-list-section">
+
+        {/* Center the content */}
+        <div className="product-toolbar d-flex justify-content-center">
+          <Form.Group
+            className="product-sort-control d-flex align-items-center gap-2"
+            controlId="sort-products"
+          >
+            <Form.Label className="product-sort-label mb-0">
+              Sort by
+            </Form.Label>
+
+            <Form.Select
+              value={sortOption}
+              onChange={(event) => setSortOption(event.target.value)}
+              aria-label="Sort products"
+              style={{ width: "auto" }}
+            >
+              <option value="normal">Normal</option>
+              <option value="lowest">Lowest</option>
+              <option value="highest">Highest</option>
+            </Form.Select>
+          </Form.Group>
+        </div>
+
         <Row className="g-4">
-          {products.map((product) => (
+          {sortedProducts.map((product) => (
             <Col xs={12} md={6} key={product.id}>
               <Card className="h-100 shadow-sm product-card">
                 <Card.Body className="d-flex gap-3 gap-md-4">
@@ -49,11 +104,13 @@ const DisplayProducts = ({ products, quantities, onAdd, onSubtract }) => {
                     </Card.Text>
 
                     <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
-                      {/* <span className="product-price">{product.value}</span> */}
-                      {/* <span className="rating-chip">
+                      <span className="product-price">
+                        {PRICE_FORMATTER.format(product.price)}
+                      </span>
+                      <span className="rating-chip">
                         <i className="fa-solid fa-star" aria-hidden="true" />
-                        <span className="ms-1">{product.ratings} / 5</span>
-                      </span> */}
+                        <span>{product.ratings} / 5</span>
+                      </span>
                     </div>
 
                     <div className="d-flex align-items-center gap-2">
@@ -99,10 +156,13 @@ const DisplayProducts = ({ products, quantities, onAdd, onSubtract }) => {
                 src={activeProduct.image}
                 alt={activeProduct.name}
               />
+              <p className="product-price product-price-lg mb-2">
+                {PRICE_FORMATTER.format(activeProduct.price)}
+              </p>
               <p className="mb-2">{activeProduct.desc}</p>
               <div className="rating-chip rating-chip-lg mx-auto">
                 <i className="fa-solid fa-star" aria-hidden="true" />
-                <span className="ms-1">{activeProduct.ratings} / 5</span>
+                <span>{activeProduct.ratings} / 5</span>
               </div>
             </div>
           ) : (
